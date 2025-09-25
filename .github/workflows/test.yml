@@ -1,0 +1,175 @@
+name: Test Dual-Output Image Compressor
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test-macos:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        brew update
+        brew install imagemagick bc
+
+    - name: Verify ImageMagick installation
+      run: |
+        magick -version
+        bc --version
+
+    - name: Make scripts executable
+      run: |
+        chmod +x bin/dual_output_image_compressor.sh
+        chmod +x scripts/install.sh
+        chmod +x examples/batch-processing.sh
+
+    - name: Test help function
+      run: |
+        ./bin/dual_output_image_compressor.sh -h
+
+    - name: Create test images
+      run: |
+        mkdir -p test_images
+        # Create small test images for CI
+        magick -size 100x100 xc:blue test_images/blue.png
+        magick -size 150x150 xc:red test_images/red.jpg
+        magick -size 200x200 xc:green test_images/green.png
+
+    - name: Test basic compression (1MB)
+      run: |
+        ./bin/dual_output_image_compressor.sh test_images test_output_1mb
+
+    - name: Test custom size compression (500KB)
+      run: |
+        ./bin/dual_output_image_compressor.sh test_images test_output_500k -k500
+
+    - name: Test custom size compression (2MB)
+      run: |
+        ./bin/dual_output_image_compressor.sh test_images test_output_2mb -m2
+
+    - name: Verify output structure
+      run: |
+        # Check directory structure
+        test -d test_output_1mb/jpeg_compressed
+        test -d test_output_1mb/png_compressed
+        test -d test_output_500k/jpeg_compressed
+        test -d test_output_500k/png_compressed
+        test -d test_output_2mb/jpeg_compressed
+        test -d test_output_2mb/png_compressed
+
+    - name: Verify output files exist
+      run: |
+        # Check for compressed files
+        ls -la test_output_1mb/jpeg_compressed/
+        ls -la test_output_1mb/png_compressed/
+
+        # Count output files (should have 3 JPEG and 3 PNG files each)
+        jpeg_count=$(find test_output_1mb/jpeg_compressed -name "*.jpeg" | wc -l)
+        png_count=$(find test_output_1mb/png_compressed -name "*.png" | wc -l)
+
+        echo "JPEG files: $jpeg_count"
+        echo "PNG files: $png_count"
+
+        # Verify we have the expected number of files
+        test $jpeg_count -eq 3
+        test $png_count -eq 3
+
+    - name: Test error handling (invalid size parameter)
+      run: |
+        # This should fail gracefully
+        if ./bin/dual_output_image_compressor.sh test_images test_output_invalid -x999; then
+          echo "Error: Should have failed with invalid parameter"
+          exit 1
+        else
+          echo "Good: Invalid parameter properly rejected"
+        fi
+
+    - name: Test error handling (non-existent directory)
+      run: |
+        # This should handle missing directory gracefully
+        ./bin/dual_output_image_compressor.sh non_existent_dir test_output_missing || echo "Handled missing directory gracefully"
+
+    - name: Performance benchmark
+      run: |
+        # Create more test images for performance test
+        mkdir -p benchmark_images
+        for i in {1..10}; do
+          magick -size 300x300 xc:blue "benchmark_images/test_${i}.png"
+          magick -size 300x300 xc:red "benchmark_images/test_${i}.jpg"
+        done
+
+        # Time the processing
+        time ./bin/dual_output_image_compressor.sh benchmark_images benchmark_output -m1
+
+        # Report results
+        jpeg_count=$(find benchmark_output/jpeg_compressed -name "*.jpeg" | wc -l)
+        png_count=$(find benchmark_output/png_compressed -name "*.png" | wc -l)
+        echo "Processed $jpeg_count JPEG and $png_count PNG files"
+
+    - name: Upload test artifacts
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: test-outputs-macos
+        path: |
+          test_output_*/
+          benchmark_output/
+
+  lint-shell:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install shellcheck
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y shellcheck
+
+    - name: Lint shell scripts
+      run: |
+        find . -name "*.sh" -type f -exec shellcheck {} \;
+
+  test-ubuntu:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y imagemagick bc
+
+    - name: Make scripts executable
+      run: |
+        chmod +x bin/dual_output_image_compressor.sh
+
+    - name: Create test images
+      run: |
+        mkdir -p test_images
+        magick -size 100x100 xc:blue test_images/blue.png
+        magick -size 150x150 xc:red test_images/red.jpg
+
+    - name: Test basic functionality on Ubuntu
+      run: |
+        ./bin/dual_output_image_compressor.sh test_images test_output_ubuntu
+
+    - name: Verify Ubuntu output
+      run: |
+        test -d test_output_ubuntu/jpeg_compressed
+        test -d test_output_ubuntu/png_compressed
+
+        jpeg_count=$(find test_output_ubuntu/jpeg_compressed -name "*.jpeg" | wc -l)
+        png_count=$(find test_output_ubuntu/png_compressed -name "*.png" | wc -l)
+
+        echo "Ubuntu test - JPEG files: $jpeg_count, PNG files: $png_count"

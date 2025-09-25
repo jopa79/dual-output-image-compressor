@@ -1,0 +1,62 @@
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+/tmp/
+temp/
+
+# Output directories (user-generated)
+**/dual_compressed/
+**/compressed/
+**/output/
+**/results/
+**/*_compressed/
+**/*_output/
+
+# Test files and directories
+test_images/
+test_output/
+sample_images/
+test_results/
+
+# Log files
+*.log
+logs/
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# System files
+*.pid
+*.lock
+
+# ImageMagick temp files
+/tmp/jpeg_dual_*
+/tmp/png_dual_*
+/tmp/*result*
+/tmp/dual_input_files_*
+
+# Performance monitoring files
+performance_*.txt
+benchmark_*.log
+
+# User configuration overrides
+config.local.sh
+settings.local.sh
