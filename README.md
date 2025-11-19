@@ -13,7 +13,7 @@ A powerful batch image compression tool that creates both JPEG and PNG versions 
 - **📊 Real-time Progress**: Live progress bars for both JPEG and PNG processing
 - **📁 Organized Output**: Separate directories for each format with clear naming conventions
 - **🛡️ Error Handling**: Comprehensive error checking and graceful fallbacks
-- **🎨 Multiple Interfaces**: Choose between Terminal UI (TUI), Web UI, or CLI based on your preference
+- **🎨 Multiple Interfaces**: Choose between Modern GUI, Terminal UI (TUI), Web UI, or CLI based on your preference
 - **⚡ Quick Presets**: Pre-configured settings for common use cases (Web, Social Media, Print, etc.)
 
 ## 🔧 Requirements
@@ -21,10 +21,19 @@ A powerful batch image compression tool that creates both JPEG and PNG versions 
 ### System Requirements
 - macOS with Apple Silicon (optimized for M4 Ultra)
 - Bash shell environment
+- Python 3.8+ (for GUI version)
 
 ### Dependencies
+
+**Core Dependencies (Required):**
 ```bash
 brew install imagemagick bc
+```
+
+**Python GUI Dependencies (Optional):**
+```bash
+# Install Python dependencies for the graphical interface
+pip3 install -r requirements.txt
 ```
 
 ## 📖 Usage
@@ -48,6 +57,36 @@ For a user-friendly, menu-driven experience, use the Terminal UI:
 - Users new to command-line tools
 - Quick configuration changes
 - Visual confirmation before processing
+
+### Modern GUI (CustomTkinter) 🖥️
+
+For the best user experience, use the modern Python GUI:
+
+```bash
+# First-time setup: Install Python dependencies
+pip3 install -r requirements.txt
+
+# Launch the GUI
+python3 ./bin/dual_output_image_compressor_gui.py
+```
+
+**Features:**
+- 🎨 **Beautiful modern interface** with dark mode
+- 🖱️ **Point-and-click** directory selection
+- 📊 **Real-time progress** tracking and logging
+- ⚡ **Quick preset buttons** (Web, Social Media, Standard, Quality, Print)
+- 🎚️ **Interactive slider** for parallel jobs configuration
+- 🔴 **Live compression** with start/stop controls
+- 📝 **Integrated log viewer** with color-coded messages
+- 💾 **Remembers your last settings**
+
+**Perfect for:**
+- Users who prefer graphical interfaces
+- Desktop application experience
+- Visual feedback and control
+- Multi-threaded operation monitoring
+
+**Note:** Requires Python 3.8+ and customtkinter library.
 
 ### Command-Line Interface (CLI)
 
@@ -73,6 +112,22 @@ For automation and scripting, use the direct command:
 | `-k<number>` | Target size in **Kilobytes** | `-k500` (500KB), `-k750` (750KB), `-k1024` (1024KB) |
 
 ## 💡 Examples
+
+### Python GUI Examples
+```bash
+# First-time setup
+pip3 install -r requirements.txt
+
+# Launch the GUI
+python3 ./bin/dual_output_image_compressor_gui.py
+
+# Then use the graphical interface to:
+# 1. Click "Durchsuchen" to select input/output directories
+# 2. Choose a preset (Web, Social Media, etc.) or set custom size
+# 3. Adjust parallel jobs with the slider
+# 4. Click "🚀 Kompression starten"
+# 5. Monitor progress in real-time
+```
 
 ### Terminal UI (TUI) Examples
 ```bash

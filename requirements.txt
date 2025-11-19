@@ -1,0 +1,7 @@
+# Python dependencies for Dual-Output Image Compressor GUI
+
+# CustomTkinter - Modern and customizable Python UI library
+customtkinter>=5.2.0
+
+# Pillow - Python Imaging Library (required by customtkinter)
+Pillow>=10.0.0
