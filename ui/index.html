@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dual-Output Image Compressor</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Dual-Output Image Compressor</h1>
+            <p class="subtitle">Hochleistungs-Bildkompression für JPEG und PNG</p>
+        </header>
+
+        <main>
+            <!-- Configuration Section -->
+            <section class="config-section">
+                <h2>⚙️ Konfiguration</h2>
+
+                <div class="form-group">
+                    <label for="input-dir">
+                        <span class="label-icon">📁</span>
+                        Eingabeverzeichnis:
+                    </label>
+                    <div class="input-with-button">
+                        <input type="text" id="input-dir" placeholder="z.B. /Users/name/Pictures" value="">
+                        <button onclick="selectDirectory('input-dir')" class="btn-secondary">Durchsuchen</button>
+                    </div>
+                    <small>Verzeichnis mit den zu komprimierenden Bildern</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="output-dir">
+                        <span class="label-icon">💾</span>
+                        Ausgabeverzeichnis:
+                    </label>
+                    <div class="input-with-button">
+                        <input type="text" id="output-dir" placeholder="z.B. /Users/name/compressed_output" value="">
+                        <button onclick="selectDirectory('output-dir')" class="btn-secondary">Durchsuchen</button>
+                    </div>
+                    <small>Zielverzeichnis für komprimierte Bilder</small>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <span class="label-icon">📏</span>
+                        Zielgröße:
+                    </label>
+                    <div class="size-controls">
+                        <div class="size-input-group">
+                            <input type="number" id="size-value" value="1" min="1" max="100">
+                            <select id="size-unit">
+                                <option value="m">MB (Megabytes)</option>
+                                <option value="k">KB (Kilobytes)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <small>Ziel-Dateigröße für komprimierte Bilder (±5% Toleranz)</small>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <span class="label-icon">⚡</span>
+                        Parallel-Jobs:
+                    </label>
+                    <div class="slider-container">
+                        <input type="range" id="parallel-jobs" min="1" max="28" value="20">
+                        <span id="jobs-value">20</span> Jobs
+                    </div>
+                    <small>Anzahl paralleler Verarbeitungsprozesse (optimiert für M4 Ultra)</small>
+                </div>
+            </section>
+
+            <!-- Action Buttons -->
+            <section class="action-section">
+                <button onclick="startCompression()" class="btn-primary" id="start-btn">
+                    <span class="btn-icon">🚀</span>
+                    Kompression starten
+                </button>
+                <button onclick="stopCompression()" class="btn-danger" id="stop-btn" disabled>
+                    <span class="btn-icon">⏹️</span>
+                    Abbrechen
+                </button>
+            </section>
+
+            <!-- Progress Section -->
+            <section class="progress-section" id="progress-section" style="display: none;">
+                <h2>📊 Fortschritt</h2>
+
+                <div class="progress-item">
+                    <div class="progress-header">
+                        <span>JPEG Kompression</span>
+                        <span id="jpeg-progress-text">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="jpeg-progress"></div>
+                    </div>
+                </div>
+
+                <div class="progress-item">
+                    <div class="progress-header">
+                        <span>PNG Kompression</span>
+                        <span id="png-progress-text">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="png-progress"></div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="processed-files">0</div>
+                        <div class="stat-label">Verarbeitete Dateien</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-files">0</div>
+                        <div class="stat-label">Gesamt Dateien</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="elapsed-time">00:00</div>
+                        <div class="stat-label">Verstrichene Zeit</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="estimated-time">--:--</div>
+                        <div class="stat-label">Verbleibende Zeit</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Log Section -->
+            <section class="log-section">
+                <div class="log-header">
+                    <h2>📝 Protokoll</h2>
+                    <button onclick="clearLog()" class="btn-secondary btn-small">Löschen</button>
+                </div>
+                <div class="log-content" id="log-content">
+                    <div class="log-entry info">Bereit zum Starten...</div>
+                </div>
+            </section>
+
+            <!-- Quick Actions -->
+            <section class="quick-actions">
+                <h3>⚡ Schnellaktionen</h3>
+                <div class="quick-buttons">
+                    <button onclick="setPreset('web')" class="btn-preset">
+                        🌐 Web (300KB)
+                    </button>
+                    <button onclick="setPreset('social')" class="btn-preset">
+                        📱 Social Media (800KB)
+                    </button>
+                    <button onclick="setPreset('standard')" class="btn-preset">
+                        📄 Standard (1MB)
+                    </button>
+                    <button onclick="setPreset('quality')" class="btn-preset">
+                        ✨ Hohe Qualität (2MB)
+                    </button>
+                    <button onclick="setPreset('print')" class="btn-preset">
+                        🖨️ Druck (3MB)
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>⚡ Optimiert für Apple M4 Ultra | 🚀 Entwickelt für Geschwindigkeit | 🎯 Konzipiert für Präzision</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
