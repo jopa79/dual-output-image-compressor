@@ -13,6 +13,8 @@ A powerful batch image compression tool that creates both JPEG and PNG versions 
 - **📊 Real-time Progress**: Live progress bars for both JPEG and PNG processing
 - **📁 Organized Output**: Separate directories for each format with clear naming conventions
 - **🛡️ Error Handling**: Comprehensive error checking and graceful fallbacks
+- **🎨 Multiple Interfaces**: Choose between Terminal UI (TUI), Web UI, or CLI based on your preference
+- **⚡ Quick Presets**: Pre-configured settings for common use cases (Web, Social Media, Print, etc.)
 
 ## 🔧 Requirements
 
@@ -27,9 +29,32 @@ brew install imagemagick bc
 
 ## 📖 Usage
 
-### Basic Syntax
+### Interactive Terminal UI (TUI) 🎨
+
+For a user-friendly, menu-driven experience, use the Terminal UI:
+
 ```bash
-./dual_output_image_compressor.sh [INPUT_DIR] [OUTPUT_DIR] [SIZE_PARAMETER]
+./bin/dual_output_image_compressor_tui.sh
+```
+
+**Features:**
+- 📋 Interactive menu system
+- ⚙️ Easy configuration without command-line parameters
+- ⚡ Quick presets (Web, Social Media, Standard, Quality, Print)
+- 👀 Visual overview of current settings
+- 🎯 Guided input validation
+
+**Perfect for:**
+- Users new to command-line tools
+- Quick configuration changes
+- Visual confirmation before processing
+
+### Command-Line Interface (CLI)
+
+For automation and scripting, use the direct command:
+
+```bash
+./bin/dual_output_image_compressor.sh [INPUT_DIR] [OUTPUT_DIR] [SIZE_PARAMETER]
 ```
 
 ### Parameters
@@ -49,38 +74,74 @@ brew install imagemagick bc
 
 ## 💡 Examples
 
-### Basic Usage
+### Terminal UI (TUI) Examples
+```bash
+# Start the interactive menu
+./bin/dual_output_image_compressor_tui.sh
+
+# Use quick presets from the menu:
+# - Option 6: Web optimization (300KB)
+# - Option 7: Social Media (800KB)
+# - Option 8: Standard (1MB)
+# - Option 9: High Quality (2MB)
+# - Option 10: Print (3MB)
+```
+
+### CLI Basic Usage
 ```bash
 # Process current directory with default 1MB target
-./dual_output_image_compressor.sh
+./bin/dual_output_image_compressor.sh
 
 # Process specific directories
-./dual_output_image_compressor.sh ~/Pictures ~/Desktop/compressed_output
+./bin/dual_output_image_compressor.sh ~/Pictures ~/Desktop/compressed_output
 ```
 
-### Custom Target Sizes
+### CLI Custom Target Sizes
 ```bash
 # Compress to 500KB files
-./dual_output_image_compressor.sh ~/Photos ~/Output -k500
+./bin/dual_output_image_compressor.sh ~/Photos ~/Output -k500
 
 # Compress to 2MB files
-./dual_output_image_compressor.sh ~/Pictures ~/Results -m2
+./bin/dual_output_image_compressor.sh ~/Pictures ~/Results -m2
 
 # High-quality 5MB compression
-./dual_output_image_compressor.sh . ./premium_output -m5
+./bin/dual_output_image_compressor.sh . ./premium_output -m5
 ```
 
-### Advanced Workflows
+### CLI Advanced Workflows
 ```bash
 # Web optimization (small files)
-./dual_output_image_compressor.sh ./web_assets ./optimized -k300
+./bin/dual_output_image_compressor.sh ./web_assets ./optimized -k300
 
 # Print-ready compression (larger files)
-./dual_output_image_compressor.sh ./print_photos ./print_ready -m3
+./bin/dual_output_image_compressor.sh ./print_photos ./print_ready -m3
 
 # Social media optimization
-./dual_output_image_compressor.sh ./social_content ./social_ready -k800
+./bin/dual_output_image_compressor.sh ./social_content ./social_ready -k800
 ```
+
+### Web UI (Browser-based) 🌐
+
+A modern, responsive web interface is also available:
+
+```bash
+# Open in your default browser
+open ui/index.html
+
+# Or navigate to the file manually:
+# File location: ui/index.html
+```
+
+**Features:**
+- 🎨 Modern, gradient-styled interface
+- 📱 Responsive design (works on desktop and mobile)
+- 🖱️ Point-and-click configuration
+- 📊 Visual progress tracking with live statistics
+- 📝 Real-time log output
+- ⚡ Quick preset buttons for common scenarios
+- 🌈 Color-coded status indicators
+
+**Note:** The Web UI requires a modern browser (Chrome, Firefox, Safari, or Edge) and uses JavaScript to communicate with the backend compression script.
 
 ## 📁 Output Structure
 
